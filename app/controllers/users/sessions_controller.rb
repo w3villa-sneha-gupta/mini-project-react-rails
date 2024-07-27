@@ -4,6 +4,21 @@ class Users::SessionsController < Devise::SessionsController
   skip_before_action :verify_authenticity_token
   respond_to :json
   include RackSessionsFix
+
+  def create
+    self.resource = warden.authenticate!(auth_options)
+    
+    if resource.email_verified && resource.phone_verified
+      sign_in(resource_name, resource)
+      render json: { status: 'success', message: 'Signed in successfully.' }, status: :ok
+    else
+      sign_out(resource_name)
+      render json: { status: 'error', message: 'Please verify your email and phone number before signing in.' }, status: :unauthorized
+    end
+  end
+
+  protected
+  
   private
   def respond_with(current_user, _opts = {})
     render json: {

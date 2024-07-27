@@ -21,6 +21,10 @@ gem 'rack-cors'
 
 gem 'letter_opener'
 
+gem 'twilio-ruby'
+
+gem 'dotenv-rails'
+
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 
