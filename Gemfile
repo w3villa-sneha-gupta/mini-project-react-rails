@@ -19,6 +19,8 @@ gem "importmap-rails"
 
 gem 'rack-cors'
 
+gem 'letter_opener'
+
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 

@@ -316,6 +316,8 @@ Devise.setup do |config|
     jwt.expiration_time = 30.minutes.to_i
   end
 
+  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+
   # ==> Configuration for :registerable
 
   # When set to false, does not sign a user in automatically after their password is
