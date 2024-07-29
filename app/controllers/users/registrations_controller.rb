@@ -4,7 +4,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   skip_before_action :verify_authenticity_token
   include RackSessionsFix
   respond_to :json
-  private
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
@@ -14,15 +13,18 @@ class Users::RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:sign_up, keys: [:phone_number])
   end
 
-  def respond_with(current_user, _opts = {})
+  def respond_with(resource, _opts = {})
     if resource.persisted?
       render json: {
-        status: {code: 200, message: 'Signed up successfully.'},
-        data: UserSerializer.new(current_user).serializable_hash[:data][:attributes]
+        status: { code: 200, message: 'Registered successfully. Please verify your email and phone number to login.' },
+        data: UserSerializer.new(resource).serializable_hash[:data][:attributes]
       }
     else
+      # Log errors for debugging
+      Rails.logger.debug("User creation failed: #{resource.errors.full_messages}")
+      error_message = resource.errors.full_messages.to_sentence
       render json: {
-        status: {message: "User couldn't be created successfully. #{current_user.errors.full_messages.to_sentence}"}
+        status: { message: error_message }
       }, status: :unprocessable_entity
     end
   end
@@ -34,4 +36,5 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def configure_account_update_params
     devise_parameter_sanitizer.permit(:account_update, keys: [:phone_number])
   end
+
 end

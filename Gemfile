@@ -19,6 +19,8 @@ gem "importmap-rails"
 
 gem 'rack-cors'
 
+gem 'pry'
+
 gem 'letter_opener'
 
 gem 'twilio-ruby'

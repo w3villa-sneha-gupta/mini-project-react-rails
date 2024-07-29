@@ -17,11 +17,18 @@ class Users::OtpVerificationsController < ApplicationController
     def create
       @user = User.find(params[:user_id])
       if @user.verify_otp(params[:otp])
-        @user.update(otp: nil, phone_verified: true) # Clear OTP and set phone_verified to true
+        @user.update(otp: nil, phone_verified: true)
+        check_and_activate_user(@user) # Clear OTP and set phone_verified to true
         render json: { status: 'success', message: 'Phone number verified successfully.' }, status: :ok
       else
         render json: { status: 'error', message: 'Invalid OTP. Please try again.' }, status: :unprocessable_entity
       end
+    end
+
+    def check_and_activate_user(user)
+        if user.email_verified && user.phone_verified
+          user.update(active: true)
+        end
     end
   end
 

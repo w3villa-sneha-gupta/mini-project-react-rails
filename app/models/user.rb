@@ -22,7 +22,15 @@ class User < ApplicationRecord
     end
   end
 
-  def otp_expired?
-    otp_sent_at < 10.minutes.ago
+  before_save :set_default_active
+
+  # Ensure the user is activated when both email and phone are verified
+  def set_default_active
+    self.active = false if self.active.nil?
   end
+
+  def otp_expired?
+    otp_sent_at < 5.minutes.ago
+  end
+  
 end
