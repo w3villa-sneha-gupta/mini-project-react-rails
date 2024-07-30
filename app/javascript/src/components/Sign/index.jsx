@@ -1,21 +1,41 @@
 import React, { useState } from 'react';
 import './index.scss';
 import { Link } from 'react-router-dom';
+import { registerUserData } from '../../services/api';
+ 
 
 const Signup = () => {
- 
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  
-  const handleSubmit = (e) => {
-    e.preventDefault(); 
-    console.log('Email:', email);
-    console.log('Phone:', phone);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+     alert("Passwords do not match");
+      return;
+    }
+    try {
+      const response = await registerUserData({
+        body: {
+          "user": {
+            "email": email,
+            "password": password,
+            "phone_number": phone
+          }
+        }
+      });
+
+      if (response.status.code == 200) {
+       alert(response.status.message);
+      } else {
+        setError(response.status.message);
+      }
+    } catch (error) {
+      // Handle the error from the API
+      alert("Registration failed. Please try again.");
+    }
   };
 
   return (
@@ -30,7 +50,7 @@ const Signup = () => {
               required
               placeholder="Email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="field space">
@@ -40,7 +60,7 @@ const Signup = () => {
               required
               placeholder="Phone Number"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)} 
+              onChange={(e) => setPhone(e.target.value)}
             />
           </div>
           <div className="field space">
@@ -53,7 +73,6 @@ const Signup = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span className="show">SHOW</span>
           </div>
           <div className="field space mb-3">
             <span className="fa fa-lock"></span>
@@ -63,9 +82,8 @@ const Signup = () => {
               required
               placeholder="Confirm Password"
               value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)} 
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
-            <span className="show">SHOW</span>
           </div>
           <div className="field space">
             <input type="submit" value="Sign Up" />
@@ -76,11 +94,9 @@ const Signup = () => {
         </div>
         <div className="links">
           <div className="facebook">
-            {/* <FontAwesomeIcon icon={faFacebook}/> */}
             <span>Facebook</span>
           </div>
           <div className="instagram">
-            {/* <FontAwesomeIcon icon={faInstagram} /> */}
             <span>Google</span>
           </div>
         </div>

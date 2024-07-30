@@ -29,10 +29,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
     end
   end
 
-  def configure_sign_up_params
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:phone_number])
-  end
-
   def configure_account_update_params
     devise_parameter_sanitizer.permit(:account_update, keys: [:phone_number])
   end

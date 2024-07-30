@@ -1,41 +1,26 @@
 import React, { useState } from 'react';
 import './index.scss';
 import { Link } from 'react-router-dom';
+import { loginUser } from '../../services/api'; 
 
 const LoginForm = () => {
-  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const formData={
-    email: email,
-    password: password
-  }
-
- 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted with:', formData);
 
-    fetch('/users/sign_in', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      },
-      body: JSON.stringify({ user: formData }),
-    })
-    .then(response => {
-      if (response.ok) {
-        // Handle successful login
-        console.log('Login successful');
-        // Redirect to a different page or update UI as needed
-      } else {
-        // Handle login error
-        console.error('Login failed');
-      }
-    })
-    .catch(error => console.error('Error:', error));
+    try {
+      const response = await loginUser({ email, password });
+
+      if (response.status.code == 200) {
+        alert(response.status.message);
+       } else {
+        alert(response.status.message);
+       }
+    } catch (error) {
+      alert('An error occurred. Please try again.');
+    }
   };
 
   return (
@@ -50,7 +35,7 @@ const LoginForm = () => {
               required
               placeholder="Email or Phone"
               value={email}
-              onChange={(e) => setEmail(e.target.value)} 
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="field space">
@@ -61,9 +46,9 @@ const LoginForm = () => {
               required
               placeholder="Password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)} 
+              onChange={(e) => setPassword(e.target.value)}
             />
-            <span className="show">SHOW</span>
+           
           </div>
 
           <Link to="/forgotPassword">
@@ -76,16 +61,12 @@ const LoginForm = () => {
             <input type="submit" value="LOGIN" />
           </div>
         </form>
-        <div className="login">
-          Or login with
-        </div>
+        <div className="login">Or login with</div>
         <div className="links">
           <div className="facebook">
-            {/* <FontAwesomeIcon icon={faFacebook}/> */}
             <span>Facebook</span>
           </div>
           <div className="instagram">
-            {/* <FontAwesomeIcon icon={faInstagram} /> */}
             <span>Google</span>
           </div>
         </div>

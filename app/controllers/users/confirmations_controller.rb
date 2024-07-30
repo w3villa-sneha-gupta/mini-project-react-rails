@@ -24,7 +24,6 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       user.update(otp: SecureRandom.hex(3)) # Generate a 6-character OTP
       send_phone_otp(user)
       render json: { status: 'success', message: 'Email verified successfully.' }, status: :ok
-      #redirect_to new_otp_verification_path(user_id: user.id) and return# Redirect to OTP verification page
     else
       render json: { status: 'error', errors: ['Invalid or expired confirmation token'] }, status: :unprocessable_entity
     end
