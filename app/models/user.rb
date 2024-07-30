@@ -1,7 +1,8 @@
 class User < ApplicationRecord
+
   include Devise::JWT::RevocationStrategies::JTIMatcher
 
-  devise :database_authenticatable, :registerable, :confirmable, :recoverable, :validatable, :confirmable, :jwt_authenticatable, jwt_revocation_strategy: self
+  devise :database_authenticatable,  :omniauthable, :registerable, :confirmable, :recoverable, :validatable, :confirmable, :jwt_authenticatable, omniauth_providers: [:google_oauth2, :facebook], jwt_revocation_strategy: self
 
   before_create :generate_otp
 
@@ -31,6 +32,18 @@ class User < ApplicationRecord
 
   def otp_expired?
     otp_sent_at < 5.minutes.ago
+  end
+
+  def self.from_omniauth(auth)
+    where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
+      user.email = auth.info.email
+      user.password = Devise.friendly_token[0, 20]
+      user.name = auth.info.name   # Assuming the user model has a name
+
+      # Uncomment the following line if using Devise's :confirmable module and
+      # you want to skip confirmation for users signing in through OmniAuth providers
+      # user.skip_confirmation!
+    end
   end
   
 end

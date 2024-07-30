@@ -19,6 +19,15 @@ gem "importmap-rails"
 
 gem 'rack-cors'
 
+gem 'webpacker', '~> 5.4'
+
+
+gem 'devise'
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'omniauth-facebook'
+
+
 gem 'pry'
 
 gem 'letter_opener'
