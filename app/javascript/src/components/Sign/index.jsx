@@ -1,39 +1,38 @@
 import React, { useState } from 'react';
-import './index.scss';
-import { Link } from 'react-router-dom';
+import './sign.scss';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUserData } from '../../services/api';
- 
 
 const Signup = () => {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-     alert("Passwords do not match");
+      alert("Passwords do not match");
       return;
     }
     try {
       const response = await registerUserData({
         body: {
-          "user": {
-            "email": email,
-            "password": password,
-            "phone_number": phone
-          }
-        }
+          user: {
+            email,
+            password,
+            phone_number: phone,
+          },
+        },
       });
 
       if (response.status.code == 200) {
-       alert(response.status.message);
+        navigate('/email'); // Redirect to email verification page
       } else {
-        setError(response.status.message);
+        alert(response.status.message);
       }
     } catch (error) {
-      // Handle the error from the API
       alert("Registration failed. Please try again.");
     }
   };

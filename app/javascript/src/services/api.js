@@ -33,7 +33,26 @@ export const registerUserData = ({body} ) => {
     return sendRequest({
       url,
       method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+      }
     });
   };
+
+  export const getEmailToken= ({body}) =>{
+    const url= endpoints.signup.emailVerification(body);
+  
+    return sendRequest({
+      url,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+    });
+    };
+  
+
+
   
   

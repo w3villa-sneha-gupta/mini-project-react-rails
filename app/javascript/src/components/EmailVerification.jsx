@@ -1,40 +1,52 @@
-import React, { useEffect } from 'react';
-import {getEmailVerificationData} from '../services/api'; // Ensure the path is correct
+import React, { useEffect, useState } from 'react';
 
-const EmailVerification = ({ confirmation_token }) => {
+const EmailVerification = () => {
+  const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    // Extract confirmationToken from window's URL
+    const queryParams = new URLSearchParams(window.location.search);
+    const confirmationToken = queryParams.get('confirmation_token');
+    console.log(confirmationToken);
+
     const verifyEmail = async () => {
+      if (!confirmationToken) {
+        setMessage('Invalid confirmation token.');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(getEmailVerificationData(confirmation_token), {
+        const response = await fetch(`http://localhost:3000/confirmation?confirmation_token=${confirmationToken}`, {
           method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
-          },
+            'Authorization': `Bearer ${confirmationToken}`
+          }
         });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-
-        const data = await response.json();
-
-        if (data.status === 'success') {
-          alert(data.message);
+       
+        if (response.status==="success") {
+          setMessage(response.status.message);
         } else {
-          alert(data.errors ? data.errors[0] : 'Verification failed');
+          setMessage(response.status.message);
         }
       } catch (error) {
-        alert(error.message || 'An error occurred. Please try again.');
+        setMessage('An error occurred. Please try again.');
+      } finally {
+        setLoading(false);
       }
     };
 
     verifyEmail();
-  }, [confirmation_token]);
+  }, []); // Only run once on component mount
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div>
       <h1>Email Verification</h1>
+      <p>{message}</p>
     </div>
   );
 };

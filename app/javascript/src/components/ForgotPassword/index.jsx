@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.scss';
+import './password.scss';
 import { Link } from 'react-router-dom';
 
 const ForgotPassword = () => {

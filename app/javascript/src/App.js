@@ -6,17 +6,23 @@ import { BrowserRouter as Router,Routes, Route} from 'react-router-dom';
 import ForgotPassword from './components/ForgotPassword';
 import OtpVerification from './components/OtpVerification';
 import EmailVerification from './components/EmailVerification';
+import NavbarForLogin from './components/Navbar';
+import Email from './components/Email';
 
 function App() {
   return (
     <Router>
+   
       <div>
+      <NavbarForLogin/>
         <Routes>
       <Route exact path="/" element={<LoginForm/>}/>
       <Route path="/signup"   element={<Signup/>}/>
       <Route path="/forgotPassword" element={<ForgotPassword/>}/>
       <Route path="/otpVerification" element={<OtpVerification/>}/>
-      <Route path="/verify-email" element={<EmailVerification/>}/>
+      <Route path="/confirm:confirmationToken" element={<EmailVerification/>}/>
+      <Route path="/email" element={<Email/>}/>
+
         </Routes>
       </div>
   </Router>

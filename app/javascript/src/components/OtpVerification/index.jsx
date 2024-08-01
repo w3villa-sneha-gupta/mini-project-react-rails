@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './index.scss';
+import './otp.scss';
 
 const OtpVerification = () => {
   
