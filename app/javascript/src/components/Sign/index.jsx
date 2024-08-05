@@ -28,7 +28,7 @@ const Signup = () => {
       });
 
       if (response.status.code == 200) {
-        navigate('/email'); // Redirect to email verification page
+        alert(response.status.message); 
       } else {
         alert(response.status.message);
       }

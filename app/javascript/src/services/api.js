@@ -28,8 +28,9 @@ export const registerUserData = ({body} ) => {
   });
   };
 
-  export const getEmailVerificationData = ({ confirmation_token }) => {
-    const url = endpoints.signup.getEmailVerification(confirmation_token);
+  export const getEmailVerificationData = (emailToken ) => {
+    console.log("confirm", emailToken)
+    const url = endpoints.signup.getEmailVerification(emailToken);
     return sendRequest({
       url,
       method: "GET",

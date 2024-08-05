@@ -4,8 +4,9 @@ const endpoints = {
     signup: {
         register: () => `${baseUrl}/signup`,
         emailVerification:()=>`${baseUrl}/confirmation`,
-        getEmailVerification:(confirmation_token)=>`${baseUrl}/confirmation?confirmation_token=${confirmation_token}`,
+        getEmailVerification:(email_token)=>`${baseUrl}/verify_email?email_token=${email_token}`,
         otpVerification:()=>`${baseUrl}/otp_verifications`,
+
 
 
     },

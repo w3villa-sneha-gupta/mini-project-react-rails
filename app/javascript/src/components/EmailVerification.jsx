@@ -1,35 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import { getEmailVerificationData } from '../services/api';
+import { Link } from 'react-router-dom';
 
 const EmailVerification = () => {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Extract confirmationToken from window's URL
     const queryParams = new URLSearchParams(window.location.search);
-    const confirmationToken = queryParams.get('confirmation_token');
-    console.log(confirmationToken);
+    const emailToken = queryParams.get('email_token');
+    console.log('Confirmation Token:', emailToken);
 
     const verifyEmail = async () => {
-      if (!confirmationToken) {
+      if (!emailToken) {
         setMessage('Invalid confirmation token.');
         setLoading(false);
         return;
       }
 
       try {
-        const response = await fetch(`http://localhost:3000/confirmation?confirmation_token=${confirmationToken}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${confirmationToken}`
-          }
-        });
+        const response = await getEmailVerificationData(emailToken);
+        console.log("connnnn", emailToken)
+        console.log("con", response)
 
-       
-        if (response.status==="success") {
-          setMessage(response.status.message);
+        if (response.status == 'success') {
+          setMessage(response.message);
+          console.log(message);
         } else {
-          setMessage(response.status.message);
+          setMessage(response.errors);
+          console.log(message);
         }
       } catch (error) {
         setMessage('An error occurred. Please try again.');
@@ -47,6 +46,10 @@ const EmailVerification = () => {
     <div>
       <h1>Email Verification</h1>
       <p>{message}</p>
+      <p>Click on continue button for otp verification</p>
+      <Link to="/otpVerification">
+      <button>Continue</button>
+      </Link>
     </div>
   );
 };

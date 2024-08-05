@@ -8,6 +8,8 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # POST /resource/confirmation
   def create
     self.resource = resource_class.send_confirmation_instructions(resource_params)
+   
+
     if successfully_sent?(resource)
       render json: { status: 'success', message: 'Confirmation instructions sent.' }, status: :ok
     else
@@ -18,15 +20,28 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     user = User.find_by(confirmation_token: params[:confirmation_token])
-
+    
     if user.present? && user.confirmed_at.nil?
       user.update(email_verified: true, confirmed_at: Time.current)
+      user.generate_email_token_for
+
       user.update(otp: SecureRandom.hex(3)) # Generate a 6-character OTP
       send_phone_otp(user)
-      render json: { status: 'success', message: 'Email verified successfully.' }, status: :ok
+     redirect_to "http://localhost:3000/confirm?email_token=#{user.email_token}"
     else
       render json: { status: 'error', errors: ['Invalid or expired confirmation token'] }, status: :unprocessable_entity
     end
+  end
+
+  def show_email
+    user = User.find_by(email_token: params[:email_token])
+    if user.present?
+      render json: { status: 'success', message: 'email verified successfully.' }
+    else
+      render json: { status: 'error', message: 'Varification failed. Please try again.' }
+    end
+      
+   
   end
 
   private

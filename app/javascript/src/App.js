@@ -20,7 +20,7 @@ function App() {
       <Route path="/signup"   element={<Signup/>}/>
       <Route path="/forgotPassword" element={<ForgotPassword/>}/>
       <Route path="/otpVerification" element={<OtpVerification/>}/>
-      <Route path="/confirm:confirmationToken" element={<EmailVerification/>}/>
+      <Route path="/confirm" element={<EmailVerification/>}/>
       <Route path="/email" element={<Email/>}/>
 
         </Routes>

@@ -4,7 +4,7 @@ class Users::OtpVerificationsController < ApplicationController
   
     # GET /otp_verifications/new
     def new
-      @user = User.find(params[:user_id])
+      @user = User.find_by(params[:email_token])
       if @user
         # This would typically render a form in an HTML view. For APIs, this might return JSON or a status.
         render json: { message: 'OTP verification page', user_id: @user.id }, status: :ok
@@ -15,7 +15,7 @@ class Users::OtpVerificationsController < ApplicationController
   
     # POST /otp_verifications
     def create
-      @user = User.find(params[:user_id])
+      @user = User.find_by(params[:email_token])
       if @user.verify_otp(params[:otp])
         @user.update(otp: nil, phone_verified: true)
         check_and_activate_user(@user) # Clear OTP and set phone_verified to true

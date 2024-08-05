@@ -4,7 +4,12 @@ class User < ApplicationRecord
 
   devise :database_authenticatable,  :omniauthable, :registerable, :confirmable, :recoverable, :validatable, :confirmable, :jwt_authenticatable, omniauth_providers: [:google_oauth2, :facebook], jwt_revocation_strategy: self
 
-  before_create :generate_otp
+  def generate_email_token_for
+    self.email_token = SecureRandom.hex(10) 
+    save!
+  end
+  
+
 
   def generate_otp
     self.otp = SecureRandom.hex(3).to_i(16).to_s.rjust(6, '0')

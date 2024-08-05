@@ -12,6 +12,11 @@ Rails.application.routes.draw do
     omniauth_callbacks: 'users/omniauth_callbacks' 
   }
   root 'home#index'
+
+  devise_scope :user do
+    get 'verify_email', to: 'users/confirmations#show_email'
+  end
+
   get 'otp_verifications/new', to: 'users/otp_verifications#new', as: 'new_otp_verification'
   post 'otp_verifications', to: 'users/otp_verifications#create', as: 'otp_verifications'
 
